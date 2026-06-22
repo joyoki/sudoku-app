@@ -56,7 +56,7 @@ sudoku-app/
 | 数据存储 | localStorage（存档 / 统计 / 成就） |
 | 数独算法 | 回溯法生成 + Mulberry32 伪随机（支持种子） |
 | Android | 原生 WebView + 手动打包 assets（轻量方案） |
-| 构建工具 | Gradle、Node.js 脚本 |
+| 构建工具 | Gradle 8.7、Node.js 脚本 |
 
 ### 核心模块 (`app.js`)
 
@@ -71,12 +71,104 @@ sudoku-app/
 
 ## 环境要求
 
-| 工具 | 用途 | 是否必需 |
-|------|------|---------|
-| **浏览器** | 运行网页版 | 网页版必需 |
-| **Node.js** (>= 18) | 执行构建脚本 | 构建 APK 时必需 |
-| **JDK 17** | Gradle 构建 Android | 构建 APK 时必需 |
-| **Android SDK** | 编译 Android 应用 | 构建 APK 时必需 |
+| 工具 | 版本 | 用途 |
+|------|------|------|
+| **浏览器** | 任意现代浏览器 | 运行网页版 |
+| **Node.js** | >= 18 | 执行构建脚本 |
+| **JDK** | 17 | Gradle 构建 Android |
+| **Android SDK** | API 34 | 编译 Android 应用 |
+
+## 前置配置（构建 APK 必需）
+
+### macOS 配置步骤
+
+#### 1. 安装 JDK 17
+
+```bash
+# 使用 Homebrew 安装
+brew install openjdk@17
+
+# 验证安装
+/opt/homebrew/opt/openjdk@17/bin/java -version
+# 输出: openjdk version "17.0.x" ...
+```
+
+#### 2. 安装 Android SDK 命令行工具
+
+```bash
+# 安装 Android 命令行工具
+brew install android-commandlinetools
+
+# 接受 SDK 许可协议
+yes | sdkmanager --licenses
+
+# 安装必要的 SDK 组件
+sdkmanager "platforms;android-34" "build-tools;34.0.0"
+```
+
+#### 3. 配置 SDK 路径
+
+在项目 `android-webview/` 目录下创建 `local.properties` 文件：
+
+```bash
+# 创建 local.properties
+echo "sdk.dir=/opt/homebrew/share/android-commandlinetools" > android-webview/local.properties
+```
+
+#### 4. 验证环境
+
+```bash
+# 检查 Java
+java -version
+
+# 检查 SDK 组件
+sdkmanager --list_installed
+
+# 检查 Node.js
+node --version
+```
+
+### Linux 配置步骤
+
+```bash
+# 安装 JDK 17
+sudo apt install openjdk-17-jdk
+
+# 下载 Android SDK 命令行工具
+# 从 https://developer.android.com/studio#command-line-tools-only 下载
+# 解压到 ~/Android/sdk/
+
+# 设置环境变量
+export ANDROID_HOME=~/Android/sdk
+export PATH=$PATH:$ANDROID_HOME/cmdline-tools/latest/bin
+
+# 安装 SDK 组件
+yes | sdkmanager --licenses
+sdkmanager "platforms;android-34" "build-tools;34.0.0"
+
+# 创建 local.properties
+echo "sdk.dir=$HOME/Android/sdk" > android-webview/local.properties
+```
+
+### Windows 配置步骤
+
+```powershell
+# 安装 JDK 17（从 https://adoptium.net/ 下载）
+
+# 安装 Android Studio（自动安装 SDK）
+# 或手动下载 SDK 命令行工具
+
+# 设置环境变量
+set ANDROID_HOME=C:\Users\%USERNAME%\AppData\Local\Android\Sdk
+set PATH=%PATH%;%ANDROID_HOME%\cmdline-tools\latest\bin
+
+# 安装 SDK 组件
+sdkmanager --licenses
+sdkmanager "platforms;android-34" "build-tools;34.0.0"
+
+# 创建 local.properties
+echo sdk.dir=C:\\Users\\%USERNAME%\\AppData\\Local\\Android\\Sdk > android-webview\\local.properties
+```
 
 ## 编译与运行
 
@@ -93,10 +185,10 @@ python3 -m http.server 8090
 
 ### 2. Android APK
 
-此方案不依赖 Capacitor，直接用原生 WebView 加载本地 HTML，APK 体积极小。
+确保已完成上述前置配置后：
 
 ```bash
-# 安装依赖
+# 安装 Node.js 依赖
 npm install
 
 # 一键构建 Release APK
@@ -107,6 +199,30 @@ npm run apk:release
 ```
 
 构建完成后，APK 将位于项目根目录：`Sudoku-v0.1.1.apk`
+
+### 常见问题
+
+#### Q: 报错 "SDK location not found"
+
+A: 需要创建 `android-webview/local.properties` 文件，内容为 SDK 路径：
+```
+sdk.dir=/path/to/your/Android/sdk
+```
+
+#### Q: 报错 "Could not determine a usable local IP"
+
+A: 这是 Gradle 网络权限问题，确保在本地终端执行，不要在受限环境中运行。
+
+#### Q: 报错 "JAVA_HOME is not set"
+
+A: 设置 JAVA_HOME 环境变量：
+```bash
+# macOS (Homebrew)
+export JAVA_HOME=/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home
+
+# Linux
+export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
+```
 
 ## 操作快捷键
 
@@ -172,7 +288,7 @@ sudoku-app/
 | Data Storage | localStorage (save / stats / achievements) |
 | Sudoku Algorithm | Backtracking generation + Mulberry32 PRNG (seeded) |
 | Android | Native WebView + manual asset bundling (lightweight) |
-| Build Tools | Gradle, Node.js scripts |
+| Build Tools | Gradle 8.7, Node.js scripts |
 
 ### Core Modules (`app.js`)
 
@@ -187,12 +303,104 @@ sudoku-app/
 
 ## Prerequisites
 
-| Tool | Purpose | Required For |
-|------|---------|-------------|
-| **Browser** | Run web version | Web only |
-| **Node.js** (>= 18) | Run build scripts | APK builds |
-| **JDK 17** | Gradle build | APK builds |
-| **Android SDK** | Compile Android app | APK builds |
+| Tool | Version | Purpose |
+|------|---------|---------|
+| **Browser** | Any modern browser | Run web version |
+| **Node.js** | >= 18 | Run build scripts |
+| **JDK** | 17 | Gradle build for Android |
+| **Android SDK** | API 34 | Compile Android app |
+
+## Setup (Required for APK Build)
+
+### macOS Setup
+
+#### 1. Install JDK 17
+
+```bash
+# Install using Homebrew
+brew install openjdk@17
+
+# Verify installation
+/opt/homebrew/opt/openjdk@17/bin/java -version
+# Output: openjdk version "17.0.x" ...
+```
+
+#### 2. Install Android SDK Command Line Tools
+
+```bash
+# Install Android command line tools
+brew install android-commandlinetools
+
+# Accept SDK licenses
+yes | sdkmanager --licenses
+
+# Install required SDK components
+sdkmanager "platforms;android-34" "build-tools;34.0.0"
+```
+
+#### 3. Configure SDK Path
+
+Create `local.properties` file in the `android-webview/` directory:
+
+```bash
+# Create local.properties
+echo "sdk.dir=/opt/homebrew/share/android-commandlinetools" > android-webview/local.properties
+```
+
+#### 4. Verify Environment
+
+```bash
+# Check Java
+java -version
+
+# Check SDK components
+sdkmanager --list_installed
+
+# Check Node.js
+node --version
+```
+
+### Linux Setup
+
+```bash
+# Install JDK 17
+sudo apt install openjdk-17-jdk
+
+# Download Android SDK command line tools
+# From https://developer.android.com/studio#command-line-tools-only
+# Extract to ~/Android/sdk/
+
+# Set environment variables
+export ANDROID_HOME=~/Android/sdk
+export PATH=$PATH:$ANDROID_HOME/cmdline-tools/latest/bin
+
+# Install SDK components
+yes | sdkmanager --licenses
+sdkmanager "platforms;android-34" "build-tools;34.0.0"
+
+# Create local.properties
+echo "sdk.dir=$HOME/Android/sdk" > android-webview/local.properties
+```
+
+### Windows Setup
+
+```powershell
+# Install JDK 17 (from https://adoptium.net/)
+
+# Install Android Studio (includes SDK)
+# Or manually download SDK command line tools
+
+# Set environment variables
+set ANDROID_HOME=C:\Users\%USERNAME%\AppData\Local\Android\Sdk
+set PATH=%PATH%;%ANDROID_HOME%\cmdline-tools\latest\bin
+
+# Install SDK components
+sdkmanager --licenses
+sdkmanager "platforms;android-34" "build-tools;34.0.0"
+
+# Create local.properties
+echo sdk.dir=C:\\Users\\%USERNAME%\\AppData\\Local\\Android\\Sdk > android-webview\\local.properties
+```
 
 ## Build & Run
 
@@ -209,10 +417,10 @@ python3 -m http.server 8090
 
 ### 2. Android APK
 
-This approach does not depend on Capacitor. It uses a native WebView to load local HTML, resulting in a minimal APK size.
+After completing the setup above:
 
 ```bash
-# Install dependencies
+# Install Node.js dependencies
 npm install
 
 # One-click build Release APK
@@ -223,6 +431,30 @@ npm run apk:release
 ```
 
 After building, the APK will be located at the project root: `Sudoku-v0.1.1.apk`
+
+### Troubleshooting
+
+#### Q: Error "SDK location not found"
+
+A: Create `android-webview/local.properties` file with SDK path:
+```
+sdk.dir=/path/to/your/Android/sdk
+```
+
+#### Q: Error "Could not determine a usable local IP"
+
+A: This is a Gradle network permission issue. Run in local terminal, not in restricted environments.
+
+#### Q: Error "JAVA_HOME is not set"
+
+A: Set the JAVA_HOME environment variable:
+```bash
+# macOS (Homebrew)
+export JAVA_HOME=/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home
+
+# Linux
+export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
+```
 
 ## Keyboard Shortcuts
 
