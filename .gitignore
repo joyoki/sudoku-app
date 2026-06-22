@@ -3,6 +3,14 @@ node_modules/
 
 # Build artifacts
 www/
+.gradle/
+build/
+**/build/
+
+# APK outputs
+*.apk
+releases/
+dist/
 
 # OS files
 .DS_Store
@@ -16,19 +24,12 @@ Thumbs.db
 # Local tools (bundled JDK etc.)
 .tools/
 
-# Android WebView releases
-android-webview/releases/
-
-# Environment / local config
+# Android
 local.properties
+*.log
+captures/
+.externalNativeBuild/
+.cxx/
+
+# Environment
 .env
-
-# Old Capacitor project (replaced by android-webview)
-android/
-
-# Android SDK (should not be committed)
-android-sdk/
-
-# Android WebView build outputs
-android-webview/dist/
-sudoku/
