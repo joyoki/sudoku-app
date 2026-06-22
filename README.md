@@ -170,6 +170,36 @@ sdkmanager "platforms;android-34" "build-tools;34.0.0"
 echo sdk.dir=C:\\Users\\%USERNAME%\\AppData\\Local\\Android\\Sdk > android-webview\\local.properties
 ```
 
+## 快速开始（macOS 一键配置）
+
+以下命令已在 MacBook 上验证通过，可直接复制执行：
+
+```bash
+# 1. 安装 JDK 17
+brew install openjdk@17
+
+# 2. 安装 Android SDK 命令行工具
+brew install android-commandlinetools
+
+# 3. 设置环境变量
+export JAVA_HOME="/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home"
+export ANDROID_HOME="/opt/homebrew/share/android-commandlinetools"
+export PATH="$JAVA_HOME/bin:$PATH"
+
+# 4. 接受许可协议并安装 SDK 组件
+yes | /opt/homebrew/bin/sdkmanager --licenses
+yes | /opt/homebrew/bin/sdkmanager "platforms;android-34" "build-tools;34.0.0"
+
+# 5. 配置 SDK 路径
+echo "sdk.dir=/opt/homebrew/share/android-commandlinetools" > android-webview/local.properties
+
+# 6. 构建 APK
+npm install
+./build-apk.sh
+```
+
+> 已验证环境：macOS (Apple Silicon) + Homebrew + JDK 17.0.17 + Android SDK 34
+
 ## 编译与运行
 
 ### 1. 网页版（零配置）
@@ -401,6 +431,36 @@ sdkmanager "platforms;android-34" "build-tools;34.0.0"
 # Create local.properties
 echo sdk.dir=C:\\Users\\%USERNAME%\\AppData\\Local\\Android\\Sdk > android-webview\\local.properties
 ```
+
+## Quick Start (macOS)
+
+The following commands have been verified on MacBook and can be executed directly:
+
+```bash
+# 1. Install JDK 17
+brew install openjdk@17
+
+# 2. Install Android SDK command line tools
+brew install android-commandlinetools
+
+# 3. Set environment variables
+export JAVA_HOME="/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home"
+export ANDROID_HOME="/opt/homebrew/share/android-commandlinetools"
+export PATH="$JAVA_HOME/bin:$PATH"
+
+# 4. Accept licenses and install SDK components
+yes | /opt/homebrew/bin/sdkmanager --licenses
+yes | /opt/homebrew/bin/sdkmanager "platforms;android-34" "build-tools;34.0.0"
+
+# 5. Configure SDK path
+echo "sdk.dir=/opt/homebrew/share/android-commandlinetools" > android-webview/local.properties
+
+# 6. Build APK
+npm install
+./build-apk.sh
+```
+
+> Verified environment: macOS (Apple Silicon) + Homebrew + JDK 17.0.17 + Android SDK 34
 
 ## Build & Run
 
