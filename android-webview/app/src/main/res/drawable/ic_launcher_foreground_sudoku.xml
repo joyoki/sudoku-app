@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 数独 3×3 宫格线 + 圆角底，贴合游戏主色 -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <path
+        android:fillColor="#ffffff"
+        android:pathData="M28,28h52a6,6 0 0 1 6,6v52a6,6 0 0 1 -6,6h-52a6,6 0 0 1 -6,-6v-52a6,6 0 0 1 6,-6z" />
+    <!-- 外框 -->
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M31,31h46v46h-46z"
+        android:strokeWidth="2.8"
+        android:strokeColor="#2d3a8f" />
+    <!-- 3×3 宫分隔（数独粗线） -->
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M54,31L54,77"
+        android:strokeWidth="2.4"
+        android:strokeColor="#5e76ff" />
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M31,54L77,54"
+        android:strokeWidth="2.4"
+        android:strokeColor="#5e76ff" />
+    <!-- 细格线（示意 9 宫） -->
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M42.33,31L42.33,77"
+        android:strokeWidth="0.9"
+        android:strokeColor="#a8b6e8" />
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M65.67,31L65.67,77"
+        android:strokeWidth="0.9"
+        android:strokeColor="#a8b6e8" />
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M31,42.33L77,42.33"
+        android:strokeWidth="0.9"
+        android:strokeColor="#a8b6e8" />
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M31,65.67L77,65.67"
+        android:strokeWidth="0.9"
+        android:strokeColor="#a8b6e8" />
+    <!-- 中心落子点 -->
+    <path
+        android:fillColor="#5e76ff"
+        android:pathData="M54,54m-4.2,0a4.2,4.2 0 1 1 8.4,0a4.2,4.2 0 1 1 -8.4,0" />
+</vector>

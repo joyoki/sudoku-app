@@ -1,0 +1,29 @@
+apply plugin: 'com.android.application'
+
+android {
+    namespace 'com.siyongjie.sudoku'
+    compileSdk rootProject.ext.compileSdkVersion
+
+    defaultConfig {
+        applicationId 'com.siyongjie.sudoku'
+        minSdk rootProject.ext.minSdkVersion
+        targetSdk rootProject.ext.targetSdkVersion
+        versionCode 1
+        versionName '1.0'
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+}
+
+dependencies {
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+}

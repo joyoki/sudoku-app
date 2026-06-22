@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content"
+    />
+    <meta name="theme-color" content="#f5f7ff" />
+    <title>Sudoku · 数独游戏</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="app">
+      <header class="topbar">
+        <div class="brand">Sudoku</div>
+      </header>
+
+      <section class="panel game-panel">
+        <div class="row compact">
+          <button class="btn primary" data-mode="classic">经典模式</button>
+          <button class="btn" data-mode="daily">每日挑战</button>
+          <button class="btn" data-records>排行榜</button>
+        </div>
+        <div class="row">
+          <label for="difficulty">难度</label>
+          <select id="difficulty" data-difficulty>
+            <option value="easy">简单</option>
+            <option value="medium" selected>中等</option>
+            <option value="hard">困难</option>
+          </select>
+        </div>
+        <div class="row compact row-actions-main">
+          <button class="btn primary" data-newgame>新游戏</button>
+          <button class="btn" data-check>检查</button>
+        </div>
+        <div class="row compact row-hint-hud">
+          <button type="button" class="btn primary" data-hint>提示</button>
+          <div class="hud-inline">
+            <div class="lives" data-lives>❤ ❤ ❤</div>
+            <div class="timer" data-timer>00:00</div>
+          </div>
+        </div>
+        <div class="row compact">
+          <button class="btn" data-undo>撤销</button>
+          <button class="btn" data-note>笔记模式: 关</button>
+          <button class="btn danger" data-clear>清空格子</button>
+        </div>
+      </section>
+
+      <section class="board-wrap">
+        <div class="board" data-board aria-label="数独棋盘"></div>
+      </section>
+
+      <section class="panel keypad-panel">
+        <div class="keypad" data-keypad>
+          <button data-key="1">1</button>
+          <button data-key="2">2</button>
+          <button data-key="3">3</button>
+          <button data-key="4">4</button>
+          <button data-key="5">5</button>
+          <button data-key="6">6</button>
+          <button data-key="7">7</button>
+          <button data-key="8">8</button>
+          <button data-key="9">9</button>
+        </div>
+      </section>
+
+      <div class="status-wrap">
+        <div class="toast" data-toast hidden></div>
+        <p class="status" data-status>开始新游戏吧！</p>
+      </div>
+    </main>
+
+    <section class="records" data-records-panel hidden>
+      <div class="records__sheet">
+        <div class="records__head">
+          <h3>排行榜与成就</h3>
+          <button class="btn" data-close-records>关闭</button>
+        </div>
+        <div class="records__content">
+          <div class="records__block">
+            <h4>经典模式最快记录</h4>
+            <ul data-rank-classic></ul>
+          </div>
+          <div class="records__block">
+            <h4>每日挑战记录</h4>
+            <ul data-rank-daily></ul>
+          </div>
+          <div class="records__block">
+            <h4>成就</h4>
+            <ul data-achievements></ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <script src="./app.js" defer></script>
+  </body>
+</html>
+

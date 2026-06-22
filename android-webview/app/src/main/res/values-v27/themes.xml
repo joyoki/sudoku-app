@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- API 27+：内容可延伸到刘海两侧，由网页 env(safe-area-inset-*) 留白 -->
+    <style name="Theme.SudokuWebView" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowLayoutInDisplayCutoutMode">shortEdges</item>
+    </style>
+</resources>

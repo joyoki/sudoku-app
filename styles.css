@@ -1,0 +1,427 @@
+:root {
+  --bg: #f5f7ff;
+  --panel: #ffffff;
+  --text: #121a33;
+  --muted: #5f6b8a;
+  --line: #cfd7ef;
+  --line-strong: #8fa1dd;
+  --primary: #5e76ff;
+  --primary-soft: #e7ecff;
+  --danger: #ef476f;
+  --ok: #1dbe88;
+  /* 旧版 WebView 无 flex 棋盘时的回退：预留 UI 高度 */
+  --layout-chrome-v: 240px;
+}
+
+* { box-sizing: border-box; }
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+body {
+  margin: 0;
+  height: 100dvh;
+  max-height: 100dvh;
+  overflow-x: hidden;
+  overflow-y: hidden;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC",
+    "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  color: var(--text);
+  background:
+    radial-gradient(900px 300px at 50% -120px, #e0e7ff, transparent 60%),
+    linear-gradient(180deg, #f8faff, #f1f5ff);
+}
+
+.app {
+  width: 100%;
+  max-width: 100%;
+  height: 100vh;
+  height: 100dvh;
+  max-height: 100dvh;
+  margin: 0 auto;
+  padding-top: max(4px, env(safe-area-inset-top, 0px));
+  padding-right: max(4px, env(safe-area-inset-right, 0px));
+  padding-bottom: max(4px, env(safe-area-inset-bottom, 0px));
+  padding-left: max(4px, env(safe-area-inset-left, 0px));
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: auto auto minmax(0, 1fr) auto auto;
+  grid-template-areas:
+    "brand"
+    "panel"
+    "board"
+    "keypad"
+    "status";
+  gap: 4px;
+  align-content: start;
+  overflow: hidden;
+  min-height: 0;
+}
+
+/* 底部状态行：toast 绝对叠在文案上方，不占网格行高，避免棋盘闪烁 */
+.status-wrap {
+  grid-area: status;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  width: 100%;
+  /* 给 toast 预留固定槽位，避免盖到数字键盘 */
+  padding-top: 40px;
+  min-height: 56px;
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  grid-area: brand;
+  margin-bottom: 0;
+}
+.hud-inline {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 6px;
+  min-width: 0;
+}
+.lives {
+  font-size: clamp(11px, 2.8vw, 13px);
+  color: #d73e6b;
+  background: #ffeaf1;
+  border: 1px solid #ffd2df;
+  border-radius: 999px;
+  padding: 4px 6px;
+  min-width: 56px;
+  text-align: center;
+  white-space: nowrap;
+}
+.brand {
+  font-size: clamp(17px, 4.8vmin, 21px);
+  font-weight: 800;
+  letter-spacing: .04em;
+  line-height: 1.1;
+}
+.timer {
+  font-weight: 700;
+  font-size: clamp(11px, 2.8vw, 13px);
+  color: var(--primary);
+  background: var(--primary-soft);
+  border: 1px solid #c8d3ff;
+  border-radius: 999px;
+  padding: 4px 8px;
+  white-space: nowrap;
+}
+
+.panel {
+  background: var(--panel);
+  border: 1px solid #e2e8ff;
+  border-radius: 10px;
+  box-shadow: 0 6px 14px rgba(67, 92, 188, 0.06);
+  padding: 5px 6px;
+  margin-bottom: 0;
+}
+.game-panel {
+  grid-area: panel;
+  align-self: stretch;
+}
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  margin-bottom: 4px;
+}
+.row:last-child { margin-bottom: 0; }
+.row.compact { justify-content: stretch; }
+.row.compact .btn { flex: 1; }
+
+/* 与「新游戏 | 检查」相同：左「提示」flex:1，右生命+时间占另一半并右对齐 */
+.row-hint-hud.row.compact {
+  flex-wrap: nowrap;
+  gap: 8px;
+}
+.row-hint-hud .btn[data-hint] {
+  min-width: 0;
+}
+
+select {
+  border: 1px solid #cfdaff;
+  border-radius: 8px;
+  background: #f8faff;
+  color: var(--text);
+  padding: 5px 8px;
+  font-size: clamp(11px, 2.8vw, 14px);
+}
+
+.btn {
+  border: 1px solid #cfd8ff;
+  border-radius: 8px;
+  background: #f8faff;
+  color: var(--text);
+  padding: 8px 6px;
+  font-weight: 600;
+  font-size: clamp(12px, 3.2vw, 15px);
+}
+.btn:active { transform: translateY(1px); }
+.btn.primary {
+  background: linear-gradient(135deg, #5e76ff, #7f98ff);
+  color: #fff;
+  border-color: transparent;
+}
+.btn.danger {
+  color: #fff;
+  background: linear-gradient(135deg, #ff5f83, #ef476f);
+  border-color: transparent;
+}
+
+.board-wrap {
+  grid-area: board;
+  min-height: 0;
+  min-width: 0;
+  width: 100%;
+  align-self: stretch;
+  /* 与 .panel 左右内边距一致，棋盘可视宽度与「清空格子」等按钮对齐 */
+  padding: 0 6px;
+  box-sizing: border-box;
+  container-type: size;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.board {
+  width: 100%;
+  max-width: 100%;
+  max-height: 100%;
+  height: auto;
+  aspect-ratio: 1 / 1;
+  flex-shrink: 0;
+  border: 2px solid var(--line-strong);
+  border-radius: 10px;
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: repeat(9, 1fr);
+  background: #fff;
+  box-shadow: 0 10px 20px rgba(67, 92, 188, 0.1);
+}
+
+/* 支持容器单位时：在「与按钮同宽」的 board-wrap 内取最大内接正方形 */
+@supports (width: 1cqw) {
+  .board {
+    width: min(100cqw, 100cqh);
+  }
+}
+
+
+.cell {
+  position: relative;
+  border: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: clamp(15px, min(5.2vw, 7.5vmin), 30px);
+  font-weight: 700;
+  cursor: pointer;
+  user-select: none;
+}
+.cell.given {
+  color: #1e2a58;
+  background: #f5f8ff;
+}
+.cell.selected {
+  background: #dfe7ff;
+}
+.cell.peer {
+  background: #f1f5ff;
+}
+.cell.same {
+  background: #e9f0ff;
+}
+.cell.error {
+  background: #ffe7ee;
+  color: #b31a45;
+}
+.cell.solved {
+  animation: pop .25s ease;
+}
+
+@keyframes pop {
+  0% { transform: scale(.86); }
+  100% { transform: scale(1); }
+}
+
+.cell[data-col="2"],
+.cell[data-col="5"] { border-right: 2px solid var(--line-strong); }
+.cell[data-row="2"],
+.cell[data-row="5"] { border-bottom: 2px solid var(--line-strong); }
+
+.notes {
+  position: absolute;
+  inset: 2px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  font-size: clamp(8px, min(2.6vw, 3.2vmin), 13px);
+  font-weight: 600;
+  color: #7180b8;
+}
+.notes span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.keypad-panel {
+  grid-area: keypad;
+  align-self: stretch;
+  margin-bottom: 0;
+}
+
+.keypad {
+  display: grid;
+  grid-template-columns: repeat(9, 1fr);
+  gap: 4px;
+}
+.keypad button {
+  border: 1px solid #cfdaff;
+  border-radius: 8px;
+  background: #f7f9ff;
+  font-size: clamp(12px, 3.2vw, 16px);
+  font-weight: 700;
+  color: #34406c;
+  min-height: clamp(30px, 7.5vmin, 40px);
+  padding: 0 1px;
+}
+.keypad button:active {
+  transform: translateY(1px);
+  background: #e7eeff;
+}
+
+.status {
+  margin: 0;
+  width: 100%;
+  color: var(--muted);
+  text-align: center;
+  font-size: clamp(11px, 2.8vw, 13px);
+  line-height: 1.25;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.records {
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  background: rgba(13, 22, 56, 0.35);
+  backdrop-filter: blur(2px);
+  display: grid;
+  align-items: end;
+}
+.records[hidden] {
+  display: none;
+}
+.records__sheet {
+  background: #fff;
+  border-top-left-radius: 18px;
+  border-top-right-radius: 18px;
+  max-height: min(78vh, 78dvh);
+  overflow: auto;
+  padding: 12px;
+  padding-bottom: max(12px, env(safe-area-inset-bottom, 0px));
+}
+.records__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+.records__head h3 {
+  margin: 0;
+  font-size: 18px;
+}
+.records__content {
+  display: grid;
+  gap: 8px;
+}
+.records__block {
+  border: 1px solid #e2e8ff;
+  border-radius: 12px;
+  padding: 10px;
+}
+.records__block h4 {
+  margin: 0 0 8px;
+  color: #253463;
+}
+.records__block ul {
+  margin: 0;
+  padding-left: 18px;
+  color: #4a5887;
+  font-size: 14px;
+  display: grid;
+  gap: 6px;
+}
+
+.toast {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  top: 0;
+  margin-top: 2px;
+  width: max-content;
+  max-width: min(
+    92%,
+    calc(100% - 16px - env(safe-area-inset-left, 0px) - env(safe-area-inset-right, 0px))
+  );
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: 1px solid #d4dcff;
+  background: rgba(255, 255, 255, 0.97);
+  color: #1a254c;
+  box-shadow: 0 4px 14px rgba(67, 92, 188, 0.12);
+  font-size: clamp(12px, 3.2vw, 14px);
+  text-align: center;
+  line-height: 1.35;
+  z-index: 4;
+  pointer-events: none;
+}
+.toast[hidden] {
+  display: none !important;
+}
+
+@media (max-width: 390px) {
+  .row.compact:not(.row-hint-hud) {
+    flex-wrap: wrap;
+  }
+  .row.compact:not(.row-hint-hud) .btn {
+    min-width: calc(50% - 6px);
+  }
+}
+
+/* 横屏或矮屏：收紧纵向占位，避免棋盘被挤出可视区 */
+@media (orientation: landscape) and (max-height: 520px) {
+  :root {
+    --layout-chrome-v: 200px;
+  }
+  .brand {
+    font-size: clamp(18px, 4.5vmin, 22px);
+  }
+  .panel {
+    padding: 8px;
+    margin-bottom: 0;
+  }
+  .keypad {
+    gap: 4px;
+  }
+}
+
+/* 大屏：居中留白，棋盘仍尽量大 */
+@media (min-width: 600px) {
+  .app {
+    width: 100%;
+    max-width: min(100%, 820px);
+    margin: 0 auto;
+  }
+}
+

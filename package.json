@@ -1,0 +1,25 @@
+{
+  "name": "sudoku-app",
+  "version": "1.0.0",
+  "description": "- 9x9 数独棋盘（支持点击选中） - 难度切换：简单 / 中等 / 困难 - 模式切换：经典模式 / 每日挑战（每日固定题目） - 计时器 - 生命值机制（共 3 条命，填错会扣命） - 数字键盘输入 + 键盘输入（1-9） - 笔记模式（候选数） - 提示、检查、撤销、清空单元格 - 完成时通关提示 - 本地自动存档（刷新后继续） - 本地排行榜与成就面板",
+  "main": "app.js",
+  "scripts": {
+    "web:sync": "node scripts/sync-www.js",
+    "cap:sync": "npm run web:sync && npx cap sync android",
+    "android:open": "npm run cap:sync && npx cap open android",
+    "android:build:debug": "npm run cap:sync && cd android && ./gradlew assembleDebug",
+    "android:build:release": "npm run cap:sync && cd android && ./gradlew assembleRelease",
+    "apk:webview": "node scripts/sync-www.js && mkdir -p android-webview/app/src/main/assets && cp www/index.html www/app.js www/styles.css android-webview/app/src/main/assets/ && cd android-webview && ./gradlew --no-daemon assembleDebug",
+    "apk:webview:dated": "node scripts/build-apk-dated.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "@capacitor/android": "^8.3.0",
+    "@capacitor/cli": "^8.3.0",
+    "@capacitor/core": "^8.3.0"
+  }
+}
