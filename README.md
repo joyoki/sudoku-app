@@ -8,6 +8,19 @@
 
 一款纯前端数独游戏，支持网页直接运行和 Android APK 两种使用方式。
 
+## Android 应用界面
+
+以下为 Android APK（WebView 壳 + 离线网页）在手机上的主界面效果：
+
+![Sudoku Android 主界面](docs/android-screenshot-main.png)
+
+界面说明：
+
+- **顶部**：经典模式 / 每日挑战 / 排行榜，以及难度选择
+- **中部**：9×9 数独棋盘（支持选中高亮、笔记模式、提示与检查）
+- **操作区**：新游戏、检查、提示、生命值与计时、撤销、笔记模式、清空格子
+- **底部**：1–9 数字键盘与状态提示（如「开始新游戏吧！」）
+
 ## 功能
 
 - 9x9 数独棋盘（支持点击选中、同行/列/宫高亮）
@@ -269,6 +282,19 @@ export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
 # English
 
 A pure front-end Sudoku game that runs directly in the browser or as an Android APK.
+
+## Android App Screenshot
+
+Main screen of the Android APK (WebView shell + bundled offline web assets):
+
+![Sudoku Android main screen](docs/android-screenshot-main.png)
+
+What you see:
+
+- **Top**: Classic / Daily Challenge / Leaderboard, plus difficulty selector
+- **Center**: 9×9 Sudoku board with selection highlights, notes, hint, and check
+- **Controls**: New game, check, hint, lives & timer, undo, notes mode, clear cell
+- **Bottom**: 1–9 number pad and status line (e.g. “Let's start a new game!”)
 
 ## Features
 
